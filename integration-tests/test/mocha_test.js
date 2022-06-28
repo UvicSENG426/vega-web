@@ -4,6 +4,9 @@ const { writeSync } = require('fs');
 
 const ADMIN_USERNAME = 'admin@venus.com';
 const ADMIN_PASSWORD = 'pass';
+
+const STAFF_USERNAME = 'jonoliver@venus.com';
+const STAFF_PASSWORD = 'pass';
 //Example selenium test with mocha assertions
 describe('webdriver', () => {
     let driver;
@@ -58,6 +61,32 @@ describe('Login/Logout', () => {
     }, 35000);
 
     it('Admin Logout', async () => {
+        await driver.get(`http://localhost:3000`)
+        //LOGOUT
+        await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[1]/div[1]/nav[2]/div/div/div/a')).click()
+        //click signout
+        await driver.get(`http://localhost:3000/account`)
+        await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[1]/div[2]/div/div/button')).click()
+        //Verify Login/SignUp page shown
+        assert.notEqual(driver.findElements(webdriver.By.linkText('Login/SignUp')).length, 0)
+        
+    }, 35000);
+
+    it('Staff Login', async () => {
+        //login button 
+        await driver.findElement(webdriver.By.linkText('Login/SignUp')).click()
+        //username
+        await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[2]/div/div/form/div[1]/input')).sendKeys(STAFF_USERNAME)
+        //password
+        await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[2]/div/div/form/div[2]/input')).sendKeys(STAFF_PASSWORD)
+        //submit button
+        await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[2]/div/div/form/button')).click()        
+        //Verify Logout visible
+        assert.notEqual(driver.findElements(webdriver.By.name('Logout')).length, 0)
+        
+    }, 35000);
+
+    it('Staff Logout', async () => {
         await driver.get(`http://localhost:3000`)
         //LOGOUT
         await driver.findElement(webdriver.By.xpath('//*[@id="root"]/div/div[1]/div[1]/nav[2]/div/div/div/a')).click()
