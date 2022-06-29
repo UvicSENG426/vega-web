@@ -7,34 +7,7 @@ import {
 import { UserContext } from "../../auth/UserProvider.js";
 import { useState, useContext, useEffect } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
-import { addSecret, fetchSecrets } from "../../service/Vault/SecretVault.js";
-//THIS IS WHERE I AM CREATING DUMMY DATA
-let DummyData = [
-  {
-    secret: "0",
-    value: "VALUE_STR",
-    username: "ADMIN_STR",
-    date: "Wed Jun 29 00:31:32 UTC 2022",
-  },
-  {
-    secret: "1",
-    value: "VALUE_STR",
-    username: "ADMIN_STR",
-    date: "Wed Jun 29 00:31:53 UTC 2022",
-  },
-  {
-    secret: "2",
-    value: "VALUE_STR",
-    username: "ADMIN_STR",
-    date: "Wed Jun 29 00:31:54 UTC 2022",
-  },
-  {
-    secret: "3",
-    value: "VALUE_STR",
-    username: "ADMIN_STR",
-    date: "Wed Jun 29 00:31:54 UTC 2022",
-  },
-];
+import { addSecret, deleteSecret, fetchSecrets } from "../../service/Vault/SecretVault.js";
 
 const ManageSecrets = (props) => {
   const [selectFile, setSelectFile] = useState();
@@ -50,15 +23,16 @@ const ManageSecrets = (props) => {
 
   const [data, setData] = useState([]);
 
-  const secrets = async () => {
+  const getSecrets = async () => {
     if(user.username  && user.jwt) {
       let list = await fetchSecrets(user.username,user.jwt);
       setData(list);
+      console.log(list)
     }
   }
 
   useEffect(() => {
-      secrets();
+    getSecrets();
   }, [user])
 
   const [editDisplay, setEditDisplay] = useState(<div></div>);
@@ -135,7 +109,10 @@ const ManageSecrets = (props) => {
           {data.map(function (Secret, index) {
             console.log(Secret.value);
 
-            const handleDelete = (index, e) => {
+            const handleDelete = async (secret, index, e) => {
+
+                await deleteSecret(secret,user.jwt);
+                
               setData(data.filter((v, i) => i !== index));
             };
 
@@ -155,7 +132,7 @@ const ManageSecrets = (props) => {
                   <button onClick={(e) => handleEdit(index, e)}>Edit</button>
                 </td>
                 <td>
-                  <button onClick={(e) => handleDelete(index, e)}>
+                  <button onClick={(e) => handleDelete(Secret.secret, index, e)}>
                     Delete
                   </button>
                 </td>

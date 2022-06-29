@@ -1,5 +1,5 @@
 import express from 'express';
-import { addsecret, fetchsecrets } from '../services/VaultAPI.js';
+import { addsecret, fetchsecrets, deletesecret } from '../services/VaultAPI.js';
 import fileUpload from 'express-fileupload';
 
 let router = express();
@@ -36,8 +36,8 @@ router.post("/secret-upload", (req,res) => {
 
 
 router.delete("/secret-delete", (req,res) => {
-	var formData = req.id;
-    uploader(`http://localhost:8080/venus/vault/secret-delete?secretID=${id}`, formData, req.headers)
+	const {secretID} = req.query;
+    deletesecret(`http://localhost:8080/venus/vault/secret-delete?secretID=${secretID}`, req.headers)
     		.then(response => {
     			console.log("Response", response);
     			res.send(response);
