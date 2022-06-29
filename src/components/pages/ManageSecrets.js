@@ -7,10 +7,32 @@ import {
 import { UserContext } from "../../auth/UserProvider.js";
 import { useState, useContext, useEffect } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
-
+//THIS IS WHERE I AM CREATING DUMMY DATA
 let DummyData = [
-  { fileName: "test", file: "test.pdf" },
-  { fileName: "test2", file: "test2.pdf" },
+  {
+    secret: "0",
+    value: "VALUE_STR",
+    username: "ADMIN_STR",
+    date: "Wed Jun 29 00:31:32 UTC 2022",
+  },
+  {
+    secret: "1",
+    value: "VALUE_STR",
+    username: "ADMIN_STR",
+    date: "Wed Jun 29 00:31:53 UTC 2022",
+  },
+  {
+    secret: "2",
+    value: "VALUE_STR",
+    username: "ADMIN_STR",
+    date: "Wed Jun 29 00:31:54 UTC 2022",
+  },
+  {
+    secret: "3",
+    value: "VALUE_STR",
+    username: "ADMIN_STR",
+    date: "Wed Jun 29 00:31:54 UTC 2022",
+  },
 ];
 
 const ManageSecrets = (props) => {
@@ -31,7 +53,12 @@ const ManageSecrets = (props) => {
   };
   const handleClickSubmit = () => {
     if (inputName != "") {
-      let submitObject = { fileName: inputName };
+      let submitObject = {
+        secret: inputName,
+        value: "",
+        username: "",
+        date: "",
+      };
       data.unshift(submitObject);
       setShowAdd(0);
     }
@@ -62,8 +89,6 @@ const ManageSecrets = (props) => {
           </tr>
           {(() => {
             if (showAdd != 0) {
-              var submitVal = { fileName: "", file: "" };
-
               return (
                 <tr>
                   <td>Secret: </td>
@@ -90,7 +115,7 @@ const ManageSecrets = (props) => {
           })()}
 
           {data.map(function (Secret, index) {
-            console.log(Secret.fileName);
+            console.log(Secret.secret);
 
             const handleDelete = (index, e) => {
               setData(data.filter((v, i) => i !== index));
@@ -104,7 +129,7 @@ const ManageSecrets = (props) => {
 
             return (
               <tr>
-                <td>{Secret.fileName}</td>
+                <td>{Secret.secret}</td>
                 <td></td>
                 <td></td>
                 <td>
