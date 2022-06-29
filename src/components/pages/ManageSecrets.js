@@ -59,7 +59,7 @@ const ManageSecrets = (props) => {
 
   useEffect(() => {
       secrets();
-  }, [])
+  }, [user])
 
   const [editDisplay, setEditDisplay] = useState(<div></div>);
 
