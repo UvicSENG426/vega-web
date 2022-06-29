@@ -7,6 +7,7 @@ import {
 import { UserContext } from "../../auth/UserProvider.js";
 import { useState, useContext, useEffect } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { addSecret, fetchSecrets } from "../../service/Vault/SecretVault.js";
 //THIS IS WHERE I AM CREATING DUMMY DATA
 let DummyData = [
   {
@@ -39,13 +40,27 @@ const ManageSecrets = (props) => {
   const [selectFile, setSelectFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
   const [inputName, setInputName] = useState("");
+	const {user} = useContext(UserContext);
 
   const changeHandler = (event) => {
     setSelectFile(event.target.files[0]);
     setIsFilePicked(true);
   };
   const [showAdd, setShowAdd] = useState(0);
-  const [data, setData] = useState(DummyData);
+
+  const [data, setData] = useState([]);
+
+  const secrets = async () => {
+    if(user.username  && user.jwt) {
+      let list = await fetchSecrets(user.username,user.jwt);
+      setData(list);
+    }
+  }
+
+  useEffect(() => {
+      secrets();
+  }, [])
+
   const [editDisplay, setEditDisplay] = useState(<div></div>);
 
   const handleClick = () => {
@@ -54,11 +69,14 @@ const ManageSecrets = (props) => {
   const handleClickSubmit = () => {
     if (inputName != "") {
       let submitObject = {
-        secret: inputName,
-        value: "",
-        username: "",
-        date: "",
+        value: inputName,
+        username: user.username,
       };
+      
+      addSecret(submitObject, user.jwt).then(res => {
+        console.log(res)
+      })
+      
       data.unshift(submitObject);
       setShowAdd(0);
     }
@@ -115,7 +133,7 @@ const ManageSecrets = (props) => {
           })()}
 
           {data.map(function (Secret, index) {
-            console.log(Secret.secret);
+            console.log(Secret.value);
 
             const handleDelete = (index, e) => {
               setData(data.filter((v, i) => i !== index));
@@ -129,7 +147,7 @@ const ManageSecrets = (props) => {
 
             return (
               <tr>
-                <td>{Secret.secret}</td>
+                <td>{Secret.value}</td>
                 <td></td>
                 <td></td>
                 <td>
