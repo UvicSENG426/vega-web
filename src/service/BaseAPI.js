@@ -42,6 +42,18 @@ export async function doDelete(url, token) {
   return await handleResponse(response);
 }
 
+export async function doPutWithToken(url, data, token) {
+  const response = await fetch(url, {
+    method: 'PUT',
+    headers:{
+      "Content-Type": "application/json",
+      'Authorization':'Bearer '+token
+    },
+    body: JSON.stringify(data)
+  });
+  return await handleResponse(response);
+}
+
 export async function doPost(url, data) {
   console.debug('Request data:', data);
   const response = await fetch(url, {

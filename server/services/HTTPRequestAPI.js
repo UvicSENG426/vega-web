@@ -16,6 +16,10 @@ export async function doPostFile(url, data, headers){
   return await handleResponse(response);
 }
 
+export async function doPut(url, data, token){
+  const response = await fetch(url, createRequestOptions('PUT', data, token));
+  return await handleResponse(response);
+}
 
 export async function doDelete(url, token){
   const response = await fetch(url, createRequestOptions('DELETE', undefined, token));
