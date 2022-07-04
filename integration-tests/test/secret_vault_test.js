@@ -49,4 +49,35 @@ describe('Secret Vault', () => {
     assert.notEqual(driver.findElements(webdriver.By.name('TEST')).length, 0, "Created secret not visible")
     
 }, 35000);
+it('Modify Secret', async function() {
+    await driver.get("http://localhost:3000/")
+    await driver.manage().window().setRect({ width: 1720, height: 934 })
+    await driver.findElement(By.linkText("Login/SignUp")).click()
+    await driver.findElement(By.css(".mb-3:nth-child(1) > .form-control")).sendKeys("admin@venus.com")
+    await driver.findElement(By.css(".mb-3:nth-child(2) > .form-control")).sendKeys("pass")
+    await driver.findElement(By.css(".btn")).click()
+    await driver.findElement(By.linkText("Manage Secrets")).click()
+    await driver.close()
+  })
+
+  it('Delete Secret', async function() {
+    await driver.get("http://localhost:3000/")
+    await driver.manage().window().setRect({ width: 1720, height: 934 })
+    await driver.findElement(By.linkText("Manage Secrets")).click()
+    await driver.switchTo().frame(0)
+    await driver.findElement(By.css("body")).click()
+    await driver.findElement(By.css("body")).click()
+    await driver.findElement(By.css("body")).click()
+    await driver.findElement(By.css("body")).click()
+    {
+      const element = await driver.findElement(By.css("body"))
+      await driver.actions({ bridge: true}).doubleClick(element).perform()
+    }
+    await driver.close()
+  })
+
+  it('Share Secret', async function() {
+    this.skip("Share Secrets Not Yet Implemented")
+  })
+  
 });
