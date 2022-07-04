@@ -8,6 +8,8 @@ import { UserContext } from "../../auth/UserProvider.js";
 import { useState, useContext, useEffect, useRef } from "react";
 import { Form, Button, Row, Col, Table } from "react-bootstrap";
 import { addSecret, deleteSecret, fetchSecrets, updateSecret } from "../../service/Vault/SecretVault.js";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ManageSecrets = (props) => {
   const [selectFile, setSelectFile] = useState();
@@ -79,6 +81,9 @@ const ManageSecrets = (props) => {
     console.log(event.target.value);
   };
 
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
+
   return (
     <SimplePageLayout>
       <Table>
@@ -134,8 +139,20 @@ const ManageSecrets = (props) => {
             }
           })()}
 
-          {data.map(function (Secret, index) {
-
+          {data.filter( row => {
+            let filterCheck = true
+            const date = new Date(row.date)
+            
+            if (dateRange[0]) {
+              filterCheck = filterCheck && (new Date(dateRange[0]) <= date)
+            }
+            if (dateRange[1]) {
+              filterCheck = filterCheck && (new Date(dateRange[1]) >= date)
+            }
+            //if filterCheck comes back `false` the row is filtered out
+            return filterCheck;
+          }
+          ).map(function (Secret, index) {
             const handleDelete = async (secret, index, e) => {
               await deleteSecret(secret,user.jwt);
               setData(data.filter((v, i) => i !== index));
@@ -187,6 +204,24 @@ const ManageSecrets = (props) => {
               );
             }
           })}
+          <tr>
+            <td>
+              <h5>Filter:</h5>
+              <DatePicker
+                selectsRange={true}
+                startDate={startDate}
+                endDate={endDate}
+                onChange={(update) => {
+                  setDateRange(update);
+                }}
+                isClearable={true}
+              />
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
         </thead>
       </Table>
     </SimplePageLayout>
