@@ -16,8 +16,8 @@ import UserRegistration from "./components/pages/UserRegistration.js";
 import Register from "./components/pages/Register.js";
 import { UserProvider } from "./auth/UserProvider.js";
 import { UserContext } from "./auth/UserProvider.js";
-
 import UserAccount from "./components/pages/UserAccount.js";
+import ManageSecrets from "./components/pages/ManageSecrets";
 
 function App() {
   const { user, setUserInfo, logout } = useContext(UserContext);
@@ -35,6 +35,7 @@ function App() {
         <Route path="/resources" component={Resources} />
         <Route path="/adminpanel" component={AdminPanel} />
         <Route path="/register" component={Register} />
+        <Route path="/manageSecrets" component={ManageSecrets} />
       </Switch>
     </UserProvider>
   );
